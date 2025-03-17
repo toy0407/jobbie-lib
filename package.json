@@ -1,13 +1,16 @@
 {
   "name": "@toy0407/jobbie-lib",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Commons for Jobbie Microservices",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
     "test": "jest",
-    "prepublish": "npm run build"
+    "build": "rm -rf dist && tsc",
+    "prepublish": "npm run build",
+    "release:patch": "npm version patch --no-git-tag-version && npm publish",
+    "release:minor": "npm version minor --no-git-tag-version && npm publish",
+    "release:major": "npm version major --no-git-tag-version && npm publish"
   },
   "files": [
     "dist"
