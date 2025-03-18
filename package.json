@@ -1,6 +1,6 @@
 {
   "name": "@toy0407/jobbie-lib",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Commons for Jobbie Microservices",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -26,8 +26,7 @@
     "@prisma/client": "^4.0.0",
     "aws-sdk": "^2.1692.0",
     "middy": "^0.36.0",
-    "pino": "^9.6.0",
-    "uuid": "^11.1.0"
+    "pino": "^9.6.0"
   },
   "repository": {
     "type": "git",
