@@ -1,2 +1,2 @@
-import { PrismaClient, Prisma } from "@prisma/client";
-export declare const prisma: PrismaClient<Prisma.PrismaClientOptions, never, Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined, import("@prisma/client/runtime").DefaultArgs>;
+import { PrismaClient } from "./client/index";
+export declare const prisma: PrismaClient<import("./client/index").Prisma.PrismaClientOptions, never, import("./client/index").Prisma.RejectOnNotFound | import("./client/index").Prisma.RejectPerOperation | undefined, import("./client/runtime").DefaultArgs>;

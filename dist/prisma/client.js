@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.prisma = void 0;
-const client_1 = require("@prisma/client");
+const index_1 = require("./client/index");
 const logger_util_1 = require("../utils/logger.util");
 class PrismaClientFactory {
     static create(config) {
         const connectionKey = `${config.url}_${config.poolSize || 10}`;
         if (!this.instances.has(connectionKey)) {
-            const client = new client_1.PrismaClient({
+            const client = new index_1.PrismaClient({
                 datasources: { db: { url: config.url } },
                 log: [
                     { level: "warn", emit: "event" },

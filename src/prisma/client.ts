@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient } from "./client/index";
 import { logger } from "../utils/logger.util";
 
 interface DatabaseConfig {
