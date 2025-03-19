@@ -9,10 +9,10 @@ const loggingMiddleware = (0, middlewareWrapper_util_1.createMiddleware)({
     before: (request) => {
         const { event, context } = request;
         (0, logger_util_1.getLoggerWithContext)(event, context);
-        logger_util_1.logger.info("Request received", { event });
+        logger_util_1.logger.debug("Request received", { event });
     },
     after: () => {
-        logger_util_1.logger.info("Request completed");
+        logger_util_1.logger.debug("Request completed");
     },
     onError: (request) => {
         logger_util_1.logger.error("Request failed", request.error);
