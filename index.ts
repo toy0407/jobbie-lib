@@ -6,7 +6,6 @@ export * from "./src/interfaces/api.interface";
 
 // Export everything from middlewares
 export * from "./src/middlewares/lambda-log.middleware";
-export * from "./src/middlewares/timing.middleware";
 
 // Export everything from utils
 export * from "./src/utils/lambdaWrapper.util";

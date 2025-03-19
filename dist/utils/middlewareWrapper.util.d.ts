@@ -6,6 +6,11 @@ interface MiddlewareOptions {
     after?: MiddlewareFn;
     onError?: ErrorMiddlewareFn;
 }
+/**
+ * @description Generic middleware wrapper
+ * @param options Middleware options before, after, onError
+ * @returns Middy middleware object
+ */
 export declare function createMiddleware(options: MiddlewareOptions): () => {
     before: ((request: middy.Request) => Promise<void>) | undefined;
     after: ((request: middy.Request) => Promise<void>) | undefined;

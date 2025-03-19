@@ -15,9 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.lambdaHandler = lambdaHandler;
 const core_1 = __importDefault(require("@middy/core"));
 const api_interface_1 = require("../interfaces/api.interface");
-const lambda_log_middleware_1 = __importDefault(require("../middlewares/lambda-log.middleware"));
-const timing_middleware_1 = __importDefault(require("../middlewares/timing.middleware"));
 const errors_1 = require("../core/errors");
+const lambda_log_middleware_1 = require("../middlewares/lambda-log.middleware");
 function lambdaHandler(handlerFn) {
     const middyHandler = (0, core_1.default)((event, context) => __awaiter(this, void 0, void 0, function* () {
         const result = yield handlerFn(event, context);
@@ -32,8 +31,8 @@ function lambdaHandler(handlerFn) {
         };
     }));
     middyHandler
-        .use((0, lambda_log_middleware_1.default)())
-        .use((0, timing_middleware_1.default)())
+        .use((0, lambda_log_middleware_1.loggingMiddleware)())
+        .use((0, lambda_log_middleware_1.timingMiddleware)())
         .onError((request) => __awaiter(this, void 0, void 0, function* () {
         const error = request.error instanceof Error
             ? request.error

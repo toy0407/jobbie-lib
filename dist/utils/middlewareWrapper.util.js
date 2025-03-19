@@ -10,7 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createMiddleware = createMiddleware;
-// Generic middleware wrapper
+/**
+ * @description Generic middleware wrapper
+ * @param options Middleware options before, after, onError
+ * @returns Middy middleware object
+ */
 function createMiddleware(options) {
     return () => ({
         before: options.before &&

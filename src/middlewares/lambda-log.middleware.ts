@@ -6,7 +6,7 @@ import { createMiddleware } from "../utils/middlewareWrapper.util";
 /**
  * @description Middleware to set logger context and log request
  */
-const loggingMiddleware = createMiddleware({
+export const loggingMiddleware = createMiddleware({
   before: (request) => {
     const { event, context } = request;
     getLoggerWithContext(event as APIGatewayProxyEvent, context as Context);
@@ -20,4 +20,19 @@ const loggingMiddleware = createMiddleware({
   },
 });
 
-export default loggingMiddleware;
+/**
+ * @description Middleware to time the handler execution
+ */
+export const timingMiddleware = createMiddleware({
+  before: () => {
+    (globalThis as any).__startTime = Date.now();
+  },
+  after: () => {
+    const duration = Date.now() - ((globalThis as any).__startTime || 0);
+    logger.addContext("lambda_duration", duration);
+  },
+  onError: () => {
+    const duration = Date.now() - ((globalThis as any).__startTime || 0);
+    logger.addContext("lambda_duration", duration);
+  },
+});

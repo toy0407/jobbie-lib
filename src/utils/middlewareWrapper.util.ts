@@ -11,7 +11,11 @@ interface MiddlewareOptions {
   onError?: ErrorMiddlewareFn;
 }
 
-// Generic middleware wrapper
+/**
+ * @description Generic middleware wrapper
+ * @param options Middleware options before, after, onError
+ * @returns Middy middleware object
+ */
 export function createMiddleware(options: MiddlewareOptions) {
   return () => ({
     before:

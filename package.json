@@ -1,16 +1,20 @@
 {
   "name": "@toy0407/jobbie-lib",
-  "version": "0.1.10",
+  "version": "0.2.2",
   "description": "Commons for Jobbie Microservices",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest",
-    "build": "rm -rf dist && tsc",
+    "build": "rm -rf dist && tsc && cp -R src/prisma/migrations dist/prisma/",
     "prepublish": "npm run build",
     "release:patch": "npm run prepublish && npm version patch --no-git-tag-version && npm publish",
     "release:minor": "npm run prepublish && npm version minor --no-git-tag-version && npm publish",
-    "release:major": "npm run prepublish && npm version major --no-git-tag-version && npm publish"
+    "release:major": "npm run prepublish && npm version major --no-git-tag-version && npm publish",
+    "migrate:dev": "prisma migrate dev --schema=./src/prisma/schema.prisma && npm run generate",
+    "migrate:deploy": "prisma migrate deploy --schema=./src/prisma/schema.prisma && npm run generate",
+    "migrate:status": "prisma migrate status --schema=./src/prisma/schema.prisma",
+    "generate": "npx prisma generate --schema=./src/prisma/schema.prisma"
   },
   "files": [
     "dist"

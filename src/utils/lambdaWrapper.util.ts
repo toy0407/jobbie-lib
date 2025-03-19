@@ -5,14 +5,16 @@ import {
   Context,
 } from "aws-lambda";
 import { ApiResponse, ApiStatusCodes } from "../interfaces/api.interface";
-import loggingMiddleware from "../middlewares/lambda-log.middleware";
-import timingMiddleware from "../middlewares/timing.middleware";
 import {
   BadRequestError,
   ForbiddenError,
   NotFoundError,
   UnauthenticatedError,
 } from "../core/errors";
+import {
+  loggingMiddleware,
+  timingMiddleware,
+} from "../middlewares/lambda-log.middleware";
 
 type HandlerFn<T> = (
   event: APIGatewayProxyEvent,
