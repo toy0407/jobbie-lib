@@ -1,0 +1,188 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String            @id @default(uuid())
+  email            String            @unique
+  name             String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  resumes          Resume[]
+  applications     Application[]
+  savedJobs        SavedJob[]
+  searchHistory    SearchHistory[]
+  matchingCriteria MatchingCriteria?
+
+  @@index([email])
+  @@index([createdAt])
+}
+
+model Resume {
+  id             String        @id @default(uuid())
+  userId         String
+  user           User          @relation(fields: [userId], references: [id])
+  filePathUrl    String // S3 path or storage URL
+  content        Json // Structured resume data
+  isBaseline     Boolean       @default(false)
+  parentResume   Resume?       @relation("ResumeVersions", fields: [parentResumeId], references: [id])
+  parentResumeId String?
+  versions       Resume[]      @relation("ResumeVersions")
+  template       Template?     @relation(fields: [templateId], references: [id])
+  templateId     String?
+  fileType       FileType      @default(PDF)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  applications   Application[]
+
+  @@index([userId])
+  @@index([isBaseline])
+  @@index([parentResumeId])
+  @@index([templateId])
+}
+
+model Template {
+  id           String       @id @default(uuid())
+  name         String
+  type         TemplateType
+  templatePath String // Path to template file
+  isActive     Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  resumes      Resume[]
+
+  @@index([type])
+  @@index([isActive])
+}
+
+model Job {
+  id            String        @id @default(uuid())
+  title         String
+  company       String
+  location      String?
+  description   String
+  salaryMin     Int?
+  salaryMax     Int?
+  experienceMin Int?
+  experienceMax Int?
+  postedAt      DateTime
+  applyUrl      String
+  source        JobSource     @relation(fields: [sourceId], references: [id])
+  sourceId      String
+  applications  Application[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  SavedJob      SavedJob[]
+
+  @@index([title])
+  @@index([company])
+  @@index([createdAt])
+}
+
+model JobSource {
+  id      String @id @default(uuid())
+  name    String @unique
+  baseUrl String
+  jobs    Job[]
+
+  @@index([name])
+}
+
+model Application {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  jobId     String
+  job       Job      @relation(fields: [jobId], references: [id])
+  resumeId  String
+  resume    Resume   @relation(fields: [resumeId], references: [id])
+  status    String   @default("applied")
+  appliedAt DateTime @default(now())
+
+  @@index([userId, appliedAt])
+  @@index([jobId])
+  @@index([resumeId])
+}
+
+model SavedJob {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  jobId     String
+  job       Job      @relation(fields: [jobId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([jobId])
+}
+
+model SearchHistory {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  searchQuery String
+  filters     Json
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model MatchingCriteria {
+  id            String   @id @default(uuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id])
+  role          String?
+  minSalary     Int?
+  maxExperience Int?
+  locations     String[]
+  skills        String[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Company {
+  id          String            @id @default(uuid())
+  name        String            @unique
+  linkedInUrl String?
+  website     String?
+  employees   CompanyEmployee[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([name])
+}
+
+model CompanyEmployee {
+  id              String    @id @default(uuid())
+  companyId       String
+  company         Company   @relation(fields: [companyId], references: [id])
+  fullName        String
+  linkedInProfile String    @unique
+  contactInfo     Json
+  position        String?
+  lastVerified    DateTime?
+  createdAt       DateTime  @default(now())
+
+  @@index([companyId])
+  @@index([position])
+}
+
+enum FileType {
+  PDF
+  LATEX
+}
+
+enum TemplateType {
+  MODERNCV
+  AWESOMECV
+  SIMPLE
+  TECHNICAL
+  CUSTOM
+}
