@@ -2,7 +2,7 @@ import pino, { Logger } from "pino";
 import { Context, APIGatewayProxyEvent } from "aws-lambda";
 
 const baseLogger = pino({
-  level: process.env.LOG_LEVEL || "info",
+  level: process.env.LOG_LEVEL == "production" ? "info" : "debug",
   formatters: {
     level: (label) => ({ level: label }),
   },

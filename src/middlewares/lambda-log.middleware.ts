@@ -10,10 +10,10 @@ export const loggingMiddleware = createMiddleware({
   before: (request) => {
     const { event, context } = request;
     getLoggerWithContext(event as APIGatewayProxyEvent, context as Context);
-    logger.debug("Request received", { event });
+    logger.info("Request received", { event });
   },
   after: () => {
-    logger.debug("Request completed");
+    logger.info("Request completed");
   },
   onError: (request) => {
     logger.error("Request failed", request.error);
