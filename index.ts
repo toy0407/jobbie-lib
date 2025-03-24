@@ -1,13 +1,12 @@
-// Export everything from core
-export * from "./src/core/errors";
+import dotenv from "dotenv";
+import { getPrismaClient } from "./src/db/client";
 
-// Export everything from interfaces
-export * from "./src/interfaces/api.interface";
+async function main() {
+  console.log("Starting...");
+  dotenv.config();
+  const user = await getPrismaClient().user.findMany();
+  console.log("User: " + user);
+  console.log("Done!");
+}
 
-// Export everything from middlewares
-export * from "./src/middlewares/lambda-log.middleware";
-
-// Export everything from utils
-export * from "./src/utils/lambdaWrapper.util";
-export * from "./src/utils/logger.util";
-export * from "./src/utils/middlewareWrapper.util";
+main();

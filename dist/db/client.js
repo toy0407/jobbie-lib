@@ -1,30 +1,36 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.prisma = void 0;
-const edge_1 = require("./client/edge");
-const logger_util_1 = require("../utils/logger.util");
-class PrismaClientFactory {
-    static create(config) {
-        const connectionKey = `${config.url}_${config.poolSize || 10}`;
-        if (!this.instances.has(connectionKey)) {
-            const client = new edge_1.PrismaClient({
-                datasources: { db: { url: config.url } },
-                log: [
-                    { level: "warn", emit: "event" },
-                    { level: "error", emit: "event" },
-                ],
+exports.getPrismaClient = void 0;
+const default_1 = require("./client/default");
+class PrismaSingleton {
+    constructor(config = {}) {
+        if (!PrismaSingleton.instance) {
+            const url = new URL(config.url || process.env.DATABASE_URL);
+            if (config.poolSize)
+                url.searchParams.set("pool_max", config.poolSize.toString());
+            if (config.timeout)
+                url.searchParams.set("pool_idle_timeout", config.timeout.toString());
+            PrismaSingleton.instance = new default_1.PrismaClient({
+                datasources: {
+                    db: {
+                        url: url.toString(),
+                    },
+                },
+                log: ["query", "info", "warn", "error"], // Optional logging
+                errorFormat: "pretty",
             });
-            client.$on("warn", (e) => logger_util_1.logger.warn(e.message));
-            client.$on("error", (e) => logger_util_1.logger.error(e.message));
-            this.instances.set(connectionKey, client);
         }
-        return this.instances.get(connectionKey);
+    }
+    static getClient() {
+        if (!PrismaSingleton.instance) {
+            throw new Error("PrismaSingleton has not been initialized.");
+        }
+        return PrismaSingleton.instance;
     }
 }
-PrismaClientFactory.instances = new Map();
-// Export singleton instance
-exports.prisma = PrismaClientFactory.create({
-    url: process.env.DATABASE_URL,
-    poolSize: 10, // Connections per service instance
-    timeout: 5, // Connection timeout in seconds
-});
+PrismaSingleton.instance = null;
+const getPrismaClient = (config) => {
+    new PrismaSingleton(config);
+    return PrismaSingleton.getClient();
+};
+exports.getPrismaClient = getPrismaClient;
