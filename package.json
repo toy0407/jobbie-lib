@@ -5,16 +5,16 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "dev": "npm run generate && npx tsx index.ts",
+    "generate": "npx prisma generate",
+    "dev": "npx tsx index.ts",
     "test": "jest",
     "build": "rm -rf dist && npm run generate && tsc",
-    "release:patch": "npm run build && npm version patch --no-git-tag-version && npm publish",
-    "release:minor": "npm run build && npm version minor --no-git-tag-version && npm publish",
-    "release:major": "npm run build && npm version major --no-git-tag-version && npm publish",
+    "release:patch": "npm version patch --no-git-tag-version && npm publish",
+    "release:minor": "npm version minor --no-git-tag-version && npm publish",
+    "release:major": "npm version major --no-git-tag-version && npm publish",
     "migrate:dev": "npx prisma migrate dev && npm run generate",
     "migrate:deploy": "npx prisma migrate deploy && npm run generate",
-    "migrate:status": "npx prisma migrate status",
-    "generate": "npx prisma generate"
+    "migrate:status": "npx prisma migrate status"
   },
   "files": [
     "dist",
