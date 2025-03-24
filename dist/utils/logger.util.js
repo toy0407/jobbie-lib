@@ -7,7 +7,7 @@ exports.logger = void 0;
 exports.getLoggerWithContext = getLoggerWithContext;
 const pino_1 = __importDefault(require("pino"));
 const baseLogger = (0, pino_1.default)({
-    level: process.env.LOG_LEVEL == "production" ? "info" : "debug",
+    level: process.env.NODE_ENV == "production" ? "info" : "debug",
     formatters: {
         level: (label) => ({ level: label }),
     },
