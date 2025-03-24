@@ -1,4 +1,4 @@
-import { ApiStatusCodes } from "../interfaces/api.interface";
+import { ApiStatusCodes } from "../types/api.types";
 export declare class UnauthenticatedError extends Error {
     statusCode: ApiStatusCodes;
     constructor(message: string);

@@ -1,8 +1,3 @@
-import { PrismaClient } from "./client/default";
-interface DatabaseConfig {
-    url?: string;
-    poolSize?: number;
-    timeout?: number;
-}
-export declare const getPrismaClient: (config?: DatabaseConfig) => PrismaClient<import("./client").Prisma.PrismaClientOptions, never, import("./client/runtime/library").DefaultArgs>;
-export {};
+import { PrismaClient } from "../../prisma/generated/client";
+declare const DbClient: PrismaClient<import("../../prisma/generated/client").Prisma.PrismaClientOptions, never, import("prisma/generated/client/runtime/library").DefaultArgs>;
+export { DbClient };

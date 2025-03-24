@@ -4,7 +4,7 @@ import {
   APIGatewayProxyResult,
   Context,
 } from "aws-lambda";
-import { ApiResponse, ApiStatusCodes } from "../interfaces/api.interface";
+import { ApiResponse, ApiStatusCodes } from "../types/api.types";
 import {
   BadRequestError,
   ForbiddenError,

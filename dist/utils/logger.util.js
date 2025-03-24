@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -44,27 +35,31 @@ exports.logger = {
         loggerInstance.warn(data || {}, msg);
     },
     error(msg, error, data) {
-        loggerInstance.error(Object.assign(Object.assign({}, (data || {})), { error }), msg);
+        loggerInstance.error({ ...(data || {}), error }, msg);
     },
     debug(msg, data) {
         loggerInstance.debug(data || {}, msg);
     },
-    time(label, fn, additionalData) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const start = Date.now();
-            loggerInstance.debug(`Starting ${label}`, additionalData);
-            try {
-                const result = yield fn();
-                const duration = Date.now() - start;
-                loggerInstance.info(`Completed ${label}`, Object.assign({ duration }, (additionalData || {})));
-                return result;
-            }
-            catch (error) {
-                const duration = Date.now() - start;
-                loggerInstance.error(`Failed ${label}`, error, Object.assign({ duration }, (additionalData || {})));
-                throw error;
-            }
-        });
+    async time(label, fn, additionalData) {
+        const start = Date.now();
+        loggerInstance.debug(`Starting ${label}`, additionalData);
+        try {
+            const result = await fn();
+            const duration = Date.now() - start;
+            loggerInstance.info(`Completed ${label}`, {
+                duration,
+                ...(additionalData || {}),
+            });
+            return result;
+        }
+        catch (error) {
+            const duration = Date.now() - start;
+            loggerInstance.error(`Failed ${label}`, error, {
+                duration,
+                ...(additionalData || {}),
+            });
+            throw error;
+        }
     },
     addContext(key, value) {
         loggerInstance = loggerInstance.child({ [key]: value });

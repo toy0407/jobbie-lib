@@ -1,4 +1,4 @@
-import { ApiStatusCodes } from "../interfaces/api.interface";
+import { ApiStatusCodes } from "../types/api.types";
 
 // Custom error classes with status codes
 export class UnauthenticatedError extends Error {

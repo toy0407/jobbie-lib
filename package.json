@@ -1,25 +1,24 @@
 {
   "name": "@toy0407/jobbie-lib",
-  "version": "0.2.20",
+  "version": "0.2.28",
   "description": "Commons for Jobbie Microservices",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "npm run generate && npx tsx index.ts",
     "test": "jest",
-    "copyPrismaFiles": "cp -R src/db/migrations dist/db/ && cp -R src/db/client dist/db/",
-    "build": "rm -rf dist && tsc && npm run generate && npm run copyPrismaFiles",
-    "prepublish": "npm run build",
-    "release:patch": "npm run prepublish && npm version patch --no-git-tag-version && npm publish",
-    "release:minor": "npm run prepublish && npm version minor --no-git-tag-version && npm publish",
-    "release:major": "npm run prepublish && npm version major --no-git-tag-version && npm publish",
+    "build": "rm -rf dist && npm run generate && tsc",
+    "release:patch": "npm run build && npm version patch --no-git-tag-version && npm publish",
+    "release:minor": "npm run build && npm version minor --no-git-tag-version && npm publish",
+    "release:major": "npm run build && npm version major --no-git-tag-version && npm publish",
     "migrate:dev": "npx prisma migrate dev && npm run generate",
     "migrate:deploy": "npx prisma migrate deploy && npm run generate",
     "migrate:status": "npx prisma migrate status",
     "generate": "npx prisma generate"
   },
   "files": [
-    "dist"
+    "dist",
+    "prisma/generated"
   ],
   "devDependencies": {
     "@types/aws-sdk": "^2.7.4",
@@ -36,9 +35,6 @@
     "middy": "^0.36.0",
     "pino": "^9.6.0",
     "ts-node": "^10.9.2"
-  },
-  "prisma": {
-    "schema": "src/db/schema.prisma"
   },
   "repository": {
     "type": "git",

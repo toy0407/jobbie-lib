@@ -1,39 +1,30 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.lambdaHandler = lambdaHandler;
 const core_1 = __importDefault(require("@middy/core"));
-const api_interface_1 = require("../interfaces/api.interface");
+const api_types_1 = require("../types/api.types");
 const errors_1 = require("../core/errors");
 const lambda_log_middleware_1 = require("../middlewares/lambda-log.middleware");
 function lambdaHandler(handlerFn) {
-    const middyHandler = (0, core_1.default)((event, context) => __awaiter(this, void 0, void 0, function* () {
-        const result = yield handlerFn(event, context);
+    const middyHandler = (0, core_1.default)(async (event, context) => {
+        const result = await handlerFn(event, context);
         const response = {
             success: true,
             data: result,
             requestId: context.awsRequestId,
         };
         return {
-            statusCode: api_interface_1.ApiStatusCodes.SUCCESS,
+            statusCode: api_types_1.ApiStatusCodes.SUCCESS,
             body: JSON.stringify(response),
         };
-    }));
+    });
     middyHandler
         .use((0, lambda_log_middleware_1.loggingMiddleware)())
         .use((0, lambda_log_middleware_1.timingMiddleware)())
-        .onError((request) => __awaiter(this, void 0, void 0, function* () {
+        .onError(async (request) => {
         const error = request.error instanceof Error
             ? request.error
             : new Error("Unknown error");
@@ -41,19 +32,19 @@ function lambdaHandler(handlerFn) {
         // Map error types to status codes
         switch (true) {
             case error instanceof errors_1.UnauthenticatedError:
-                statusCode = api_interface_1.ApiStatusCodes.UNAUTHORIZED;
+                statusCode = api_types_1.ApiStatusCodes.UNAUTHORIZED;
                 break;
             case error instanceof errors_1.ForbiddenError:
-                statusCode = api_interface_1.ApiStatusCodes.FORBIDDEN;
+                statusCode = api_types_1.ApiStatusCodes.FORBIDDEN;
                 break;
             case error instanceof errors_1.NotFoundError:
-                statusCode = api_interface_1.ApiStatusCodes.NOT_FOUND;
+                statusCode = api_types_1.ApiStatusCodes.NOT_FOUND;
                 break;
             case error instanceof errors_1.BadRequestError:
-                statusCode = api_interface_1.ApiStatusCodes.BAD_REQUEST;
+                statusCode = api_types_1.ApiStatusCodes.BAD_REQUEST;
                 break;
             default:
-                statusCode = api_interface_1.ApiStatusCodes.INTERNAL_SERVER_ERROR;
+                statusCode = api_types_1.ApiStatusCodes.INTERNAL_SERVER_ERROR;
         }
         const response = {
             success: false,
@@ -64,6 +55,6 @@ function lambdaHandler(handlerFn) {
             statusCode,
             body: JSON.stringify(response),
         };
-    }));
+    });
     return middyHandler;
 }
