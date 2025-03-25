@@ -11,10 +11,9 @@ import {
   NotFoundError,
   UnauthenticatedError,
 } from "../core/errors";
-import {
-  loggingMiddleware,
-  timingMiddleware,
-} from "../middlewares/lambda-log.middleware";
+import { lambdaLogger } from "../middlewares/lambda-logger.middleware";
+import { lambdaTimer } from "../middlewares/lambda-timer.middleware";
+import jsonBodyParser from "@middy/http-json-body-parser";
 
 type HandlerFn<T> = (
   event: APIGatewayProxyEvent,
@@ -43,8 +42,9 @@ export function lambdaHandler<T>(handlerFn: HandlerFn<T>) {
   );
 
   middyHandler
-    .use(loggingMiddleware())
-    .use(timingMiddleware())
+    .use(lambdaLogger())
+    .use(lambdaTimer())
+    .use(jsonBodyParser())
     .onError(async (request: middy.Request): Promise<APIGatewayProxyResult> => {
       const error =
         request.error instanceof Error

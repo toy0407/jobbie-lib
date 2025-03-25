@@ -7,7 +7,9 @@ exports.lambdaHandler = lambdaHandler;
 const core_1 = __importDefault(require("@middy/core"));
 const api_types_1 = require("../types/api.types");
 const errors_1 = require("../core/errors");
-const lambda_log_middleware_1 = require("../middlewares/lambda-log.middleware");
+const lambda_logger_middleware_1 = require("../middlewares/lambda-logger.middleware");
+const lambda_timer_middleware_1 = require("../middlewares/lambda-timer.middleware");
+const http_json_body_parser_1 = __importDefault(require("@middy/http-json-body-parser"));
 function lambdaHandler(handlerFn) {
     const middyHandler = (0, core_1.default)(async (event, context) => {
         const result = await handlerFn(event, context);
@@ -22,8 +24,9 @@ function lambdaHandler(handlerFn) {
         };
     });
     middyHandler
-        .use((0, lambda_log_middleware_1.loggingMiddleware)())
-        .use((0, lambda_log_middleware_1.timingMiddleware)())
+        .use((0, lambda_logger_middleware_1.lambdaLogger)())
+        .use((0, lambda_timer_middleware_1.lambdaTimer)())
+        .use((0, http_json_body_parser_1.default)())
         .onError(async (request) => {
         const error = request.error instanceof Error
             ? request.error

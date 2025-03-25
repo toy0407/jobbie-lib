@@ -117,6 +117,36 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.AuthIdentityScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  lastLogin: 'lastLogin',
+  provider: 'provider',
+  providerId: 'providerId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.OTPScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  code: 'code',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  authIdentityId: 'authIdentityId'
+};
+
+exports.Prisma.SessionScalarFieldEnum = {
+  id: 'id',
+  refreshTokenHash: 'refreshTokenHash',
+  deviceInfo: 'deviceInfo',
+  ipAddress: 'ipAddress',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  isRevoked: 'isRevoked',
+  authIdentityId: 'authIdentityId'
+};
+
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
@@ -251,6 +281,11 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
+exports.ProviderTypes = exports.$Enums.ProviderTypes = {
+  EMAIL: 'EMAIL',
+  GOOGLE: 'GOOGLE'
+};
+
 exports.FileType = exports.$Enums.FileType = {
   PDF: 'PDF',
   LATEX: 'LATEX'
@@ -265,6 +300,9 @@ exports.TemplateType = exports.$Enums.TemplateType = {
 };
 
 exports.Prisma.ModelName = {
+  AuthIdentity: 'AuthIdentity',
+  OTP: 'OTP',
+  Session: 'Session',
   User: 'User',
   Resume: 'Resume',
   Template: 'Template',

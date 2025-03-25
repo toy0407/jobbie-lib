@@ -12,10 +12,6 @@ const generateAccessToken = (userId: string): string => {
 
 const generateRefreshToken = async (userId: string): Promise<string> => {
   const token = randomBytes(32).toString("hex");
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
-  await DbClient.refreshToken.create({
-    data: { userId, token, expiresAt, revoked: false },
-  });
   return token;
 };
 
